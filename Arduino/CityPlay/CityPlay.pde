@@ -23,22 +23,6 @@ Example sketch for driving Adafruit WS2801 pixels!
   BSD license, all text above must be included in any redistribution
 
 *****************************************************************************/
-
-// Choose which 2 pins you will use for output.
-// Can be any valid output pins.
-// The colors of the wires may be totally different so
-// BE SURE TO CHECK YOUR PIXELS TO SEE WHICH WIRES TO USE!
-int dataPin  = 2;    // Yellow wire on Adafruit Pixels
-int clockPin = 3;    // Green wire on Adafruit Pixels
-boolean lights[9]; 
-int sensorPin = A0;
-
-// Don't forget to connect the ground wire to Arduino ground,
-// and the +5V wire to a +5V supply
-
-// Set the first variable to the NUMBER of pixels. 25 = 25 pixels in a row
-Adafruit_WS2801 strip = Adafruit_WS2801(2, dataPin, clockPin);
-
 // Optional: leave off pin numbers to use hardware SPI
 // (pinout is then specific to each board and can't be changed)
 //Adafruit_WS2801 strip = Adafruit_WS2801(25);
@@ -54,6 +38,28 @@ Adafruit_WS2801 strip = Adafruit_WS2801(2, dataPin, clockPin);
 
 
 
+// LIGHT VARS
+
+#define NUM_LIGHTS 18
+
+int dataPin  = 2;    // Yellow wire on Adafruit Pixels
+int clockPin = 3;    // Green wire on Adafruit Pixels
+boolean lights[NUM_LIGHTS]; 
+
+int sensorLightIndex[NUM_LIGHTS];
+
+// Set the first variable to the NUMBER of pixels. 25 = 25 pixels in a row
+Adafruit_WS2801 strip = Adafruit_WS2801(NUM_LIGHTS, dataPin, clockPin);
+
+
+
+
+
+// SENSOR VARS
+
+#define NUM_DDR_PINS 8
+
+int ddrSensorValues[NUM_DDR_PINS];
 
 
 // ARPEGIO VARS
@@ -63,6 +69,7 @@ int stepPeriod = 1000;
 long dt = 0;
 long lastTime = 0;
 long accumDt = 0;
+
 
 int currentChord = 0;
 
@@ -85,14 +92,6 @@ int chords [13] [4] = {
 };
 
 
-
-
-
-
-
-
-
-
 void setup() {
     
   Serial.begin(9600);
@@ -102,6 +101,14 @@ void setup() {
   strip.show();
   
   lights[0] = true;
+  
+  
+  // setup sensorLightIndex
+  
+  int count = 0; 
+  for (int i = 0; i < NUM_LIGHTS; i++) {
+    //sensorLightIndex[i] = i
+  }
 }
 
 
@@ -113,8 +120,39 @@ void loop() {
   //colorWipe(Color(0, 0, 255), 50);
   //rainbow(20);
   //rainbowCycle(20);
-  int sensorValue = analogRead(sensorPin);  
-  Serial.println(sensorValue);
+  
+  // Read ddr Sensor values
+  
+  Serial.print("Sensor Values:  ");
+  
+  for (int i = 0; i < NUM_DDR_PINS; i++) {
+    ddrSensorValues[i] = analogRead(i);
+    
+    Serial.print(i);
+    Serial.print(", ");
+    Serial.print(ddrSensorValues[i]);
+    Serial.print("  __  ");
+    
+  }
+  Serial.println();
+  
+  
+  for (int i = 0; i < NUM_LIGHTS; i++) {
+    
+    strip.setPixelColor(i, Color(0,255,0));
+    strip.show();
+ 
+  }
+
+  delay(1000);
+  for (int i = 0; i < NUM_LIGHTS; i++) {
+    strip.setPixelColor(i, Color(255,0,0));
+    strip.show();
+   
+  }
+  delay(1000);
+  
+/*
   if (sensorValue < 500) {
     lights[0] = true; 
   }
@@ -140,9 +178,9 @@ void loop() {
      strip.setPixelColor(1, Color(0,0,0));
       strip.show();
   }
-  
+  */
  
-  //delay(500);
+  
 }
 
 
