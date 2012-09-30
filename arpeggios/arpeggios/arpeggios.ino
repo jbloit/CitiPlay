@@ -1,12 +1,5 @@
 #include "pitches.h"
 
-//int chord[4] = {NOTE_C4, NOTE_E4, NOTE_G4, NOTE_C5};
-//
-//int sounds[3][4];
-//
-
-//sounds[0] = {{NOTE_C4, NOTE_E4, NOTE_G4, NOTE_C5}};
-
 
 
 int chords [13] [4] = {
@@ -68,7 +61,7 @@ void loop() {
   accumDt += dt;
   
   if (accumDt > stepPeriod){
-      currentChord = random(0, 13);
+      currentChord = random(-1, 13);
       Serial.println(currentChord);
       accumDt = 0;
   }
@@ -81,20 +74,23 @@ void loop() {
 
 void play(int chordIndex, int maxDuration){
 
-  for (int thisNote = 0; thisNote < 4; thisNote++) {
-    
-    // to calculate the note duration, take one second
-    // divided by the note type.
-    //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
-    int noteDuration = 1000/32;
-    tone(8, chords[chordIndex][thisNote] , noteDuration);
-
-    // to distinguish the notes, set a minimum time between them.
-    // the note's duration + 30% seems to work well:
-    int pauseBetweenNotes = noteDuration * 1.30;
-    delay(pauseBetweenNotes);
-    // stop the tone playing:
+  if(chordIndex < 0){
     noTone(8);
+  } else{
+    for (int thisNote = 0; thisNote < 4; thisNote++) {
+      
+      // to calculate the note duration, take one second
+      // divided by the note type.
+      //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
+      int noteDuration = 1000/32;
+      tone(8, chords[chordIndex][thisNote] , noteDuration);
+  
+      // to distinguish the notes, set a minimum time between them.
+      // the note's duration + 30% seems to work well:
+      int pauseBetweenNotes = noteDuration * 1.30;
+      delay(pauseBetweenNotes);
+      // stop the tone playing:
+      noTone(8);
+    }
   }
-
 }
