@@ -69,11 +69,9 @@ int stepPeriod = 1000;
 long dt = 0;
 long lastTime = 0;
 long accumDt = 0;
-
-
 int currentChord = 0;
-
 int speakerPin = 8;
+
 
 int chords [13] [4] = {
   {NOTE_B1, NOTE_C2, NOTE_CS2, NOTE_D2},
@@ -123,20 +121,42 @@ void loop() {
   
   // Read ddr Sensor values
   
-  Serial.print("Sensor Values:  ");
+  //Serial.print("Sensor Values:  ");
   
   for (int i = 0; i < NUM_DDR_PINS; i++) {
     ddrSensorValues[i] = analogRead(i);
     
-    Serial.print(i);
-    Serial.print(", ");
-    Serial.print(ddrSensorValues[i]);
-    Serial.print("  __  ");
+    //Serial.print(i);
+    //Serial.print(", ");
+    //Serial.print(ddrSensorValues[i]);
+    //Serial.print("  __  ");
     
   }
-  Serial.println();
+  //Serial.println();
+  
+  for (int i = 0; i < NUM_DDR_PINS; i++) {
+    
+    if (ddrSensorValues[i] < 500) {
+      setColorForLightsAtSensorIndex(i, Color(0, 255,0));
+      strip.show();
+      
+      int currentChord = random(0, 13);  
+      play(currentChord, 500);
+      
+    } else {
+      setColorForLightsAtSensorIndex(i, Color(0, 0, 0));
+      strip.show();
+    }
+      
+  }
+  
+  // still need to actually show the lights
+  
+  //setColorForLightsAtSensorIndex
   
   
+  
+  /*
   for (int i = 0; i < NUM_LIGHTS; i++) {
     
     strip.setPixelColor(i, Color(0,255,0));
@@ -151,7 +171,7 @@ void loop() {
    
   }
   delay(1000);
-  
+  */
 /*
   if (sensorValue < 500) {
     lights[0] = true; 
@@ -184,7 +204,10 @@ void loop() {
 }
 
 
-
+void setColorForLightsAtSensorIndex(int sensorIndex, uint32_t color) {
+  strip.setPixelColor(sensorIndex * 2, color);
+  strip.setPixelColor(sensorIndex * 2 + 1, color);
+}
 
 /* Helper functions */
 
