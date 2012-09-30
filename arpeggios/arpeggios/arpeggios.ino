@@ -9,10 +9,20 @@
 
 
 
-int chords [3] [4] = {
+int chords [13] [4] = {
+  {NOTE_B1, NOTE_C2, NOTE_CS2, NOTE_D2},
   {NOTE_C4, NOTE_E4, NOTE_G4, NOTE_C5},
+  {NOTE_CS4, NOTE_F4, NOTE_GS4, NOTE_CS5},
   {NOTE_D4, NOTE_FS4, NOTE_A4, NOTE_D5},
-  {NOTE_E4, NOTE_GS4, NOTE_B4, NOTE_E5}
+  {NOTE_DS4, NOTE_F4, NOTE_DS4, NOTE_DS5},
+  {NOTE_E4, NOTE_GS4, NOTE_B4, NOTE_E5},
+  {NOTE_F4, NOTE_A4, NOTE_C4, NOTE_F5},
+  {NOTE_FS4, NOTE_AS4, NOTE_CS4, NOTE_FS5},
+  {NOTE_G4, NOTE_B4, NOTE_D4, NOTE_G5},
+  {NOTE_GS4, NOTE_C4, NOTE_DS4, NOTE_GS5},
+  {NOTE_A4, NOTE_CS4, NOTE_E4, NOTE_A5},
+  {NOTE_AS4, NOTE_D4, NOTE_F4, NOTE_AS5},
+  {NOTE_B4, NOTE_DS4, NOTE_FS4, NOTE_B5}
 };
 
 
@@ -58,7 +68,7 @@ void loop() {
   accumDt += dt;
   
   if (accumDt > stepPeriod){
-      currentChord = random(0, 3);
+      currentChord = random(0, 13);
       Serial.println(currentChord);
       accumDt = 0;
   }
