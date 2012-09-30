@@ -137,7 +137,32 @@ void loop() {
   for (int i = 0; i < NUM_DDR_PINS; i++) {
     
     if (ddrSensorValues[i] < 500) {
-      setColorForLightsAtSensorIndex(i, Color(0, 255,0));
+      int rand = random(0, 5);
+      
+
+      uint32_t color;
+      
+      switch (rand) {
+        case 0:
+        color = Color(255, 0, 0);
+        break;
+        case 1:
+        color = Color(0, 255, 0);
+        break;
+        case 2:
+        color = Color(0, 0, 255);
+        break;
+        case 3:
+        color = Color(255, 255, 0);
+        break;
+        case 4:
+        color = Color(0, 255, 255);
+        break;
+        case 5:
+        color = Color(255, 0, 255);
+        break;
+      }
+      setColorForLightsAtSensorIndex(i, color);
       strip.show();
       
       int currentChord = random(0, 13);  
