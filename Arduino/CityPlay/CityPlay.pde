@@ -23,19 +23,6 @@ Example sketch for driving Adafruit WS2801 pixels!
   BSD license, all text above must be included in any redistribution
 
 *****************************************************************************/
-// Optional: leave off pin numbers to use hardware SPI
-// (pinout is then specific to each board and can't be changed)
-//Adafruit_WS2801 strip = Adafruit_WS2801(25);
-
-// For 36mm LED pixels: these pixels internally represent color in a
-// different format.  Either of the above constructors can accept an
-// optional extra parameter: WS2801_RGB is 'conventional' RGB order
-// WS2801_GRB is the GRB order required by the 36mm pixels.  Other
-// than this parameter, your code does not need to do anything different;
-// the library will handle the format change.  Examples:
-//Adafruit_WS2801 strip = Adafruit_WS2801(25, dataPin, clockPin, WS2801_GRB);
-//Adafruit_WS2801 strip = Adafruit_WS2801(25, WS2801_GRB);
-
 
 
 // LIGHT VARS
@@ -121,20 +108,24 @@ void loop() {
   
   // Read ddr Sensor values
   
-  //Serial.print("Sensor Values:  ");
+  Serial.print("Sensors Values:  ");
   
   for (int i = 0; i < NUM_DDR_PINS; i++) {
     ddrSensorValues[i] = analogRead(i);
     
-    //Serial.print(i);
-    //Serial.print(", ");
-    //Serial.print(ddrSensorValues[i]);
-    //Serial.print("  __  ");
+    Serial.print(i);
+    Serial.print(", ");
+    Serial.print(ddrSensorValues[i]);
+    Serial.print("  __  ");
     
   }
-  //Serial.println();
+  Serial.println();
   
   for (int i = 0; i < NUM_DDR_PINS; i++) {
+    
+    // TESTING...
+    //setColorForLightsAtSensorIndex(i, Color(255, 0, 0));
+    //strip.show();
     
     if (ddrSensorValues[i] < 500) {
       int rand = random(0, 5);
@@ -174,60 +165,13 @@ void loop() {
     }
       
   }
-  
-  // still need to actually show the lights
-  
-  //setColorForLightsAtSensorIndex
-  
-  
-  
-  /*
-  for (int i = 0; i < NUM_LIGHTS; i++) {
-    
-    strip.setPixelColor(i, Color(0,255,0));
-    strip.show();
- 
-  }
-
-  delay(1000);
-  for (int i = 0; i < NUM_LIGHTS; i++) {
-    strip.setPixelColor(i, Color(255,0,0));
-    strip.show();
-   
-  }
-  delay(1000);
-  */
-/*
-  if (sensorValue < 500) {
-    lights[0] = true; 
-  }
-  else {
-    lights[0] = false;
-  }
-  
-  if (lights[0]) {
-    strip.setPixelColor(0, Color(0,255,0));
-    strip.setPixelColor(1, Color(0,255,0));
-     strip.show();
-     
-    // play sound
-    
-     int currentChord = random(-1, 13);  
-     play(currentChord, 500);
-     
-  } else {
-    
-    // turn the note off...
-    play(-1, 5);
-     strip.setPixelColor(0, Color(0,0,0));
-     strip.setPixelColor(1, Color(0,0,0));
-      strip.show();
-  }
-  */
- 
-  
 }
 
+
+
+// ***********************************************************
+// COLOR FUNCTIONS
+// ***********************************************************
 
 void setColorForLightsAtSensorIndex(int sensorIndex, uint32_t color) {
   strip.setPixelColor(sensorIndex * 2, color);
