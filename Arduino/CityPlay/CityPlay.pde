@@ -44,9 +44,12 @@ Adafruit_WS2801 strip = Adafruit_WS2801(NUM_LIGHTS, dataPin, clockPin);
 
 // SENSOR VARS
 
+#define SENSOR_EVENT_THRESHOLD 2
+
 #define NUM_DDR_PINS 8
 
 int ddrSensorValues[NUM_DDR_PINS];
+int numConsecutiveSensorEvents[NUM_DDR_PINS];
 
 
 // ARPEGIO VARS
@@ -127,10 +130,18 @@ void loop() {
     //setColorForLightsAtSensorIndex(i, Color(255, 0, 0));
     //strip.show();
     
-    if (ddrSensorValues[i] < 500) {
+    if (didSensorEventOccur(i)) {
+      numConsecutiveSensorEvents[i]++;
+    } else {
+      numConsecutiveSensorEvents[i] = 0;
+    }
+    
+    int lightIndex = lightIndexForSensorIndex(i);
+    
+    if (numConsecutiveSensorEvents[i] >= SENSOR_EVENT_THRESHOLD) {
+      
       int rand = random(0, 5);
       
-
       uint32_t color;
       
       switch (rand) {
@@ -153,20 +164,61 @@ void loop() {
         color = Color(255, 0, 255);
         break;
       }
-      setColorForLightsAtSensorIndex(i, color);
+      setColorForLightsAtSensorIndex(lightIndex, color);
       strip.show();
       
       int currentChord = random(0, 13);  
       play(currentChord, 500);
       
     } else {
-      setColorForLightsAtSensorIndex(i, Color(0, 0, 0));
+      setColorForLightsAtSensorIndex(lightIndex, Color(0, 0, 0));
       strip.show();
     }
       
   }
 }
 
+
+// ***********************************************************
+// SENSOR FUNCTIONS
+// ***********************************************************
+
+int lightIndexForSensorIndex(int sensorIndex) {
+  int lightIndex;
+  switch (sensorIndex) {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+    case 7:
+    case 8:
+      lightIndex = sensorIndex;
+      break;
+    case 4:
+      lightIndex = 6;
+      break;
+    case 5:
+      lightIndex = 4;
+      break;
+    case 6:
+      lightIndex = 5;
+      break;
+    default:
+      lightIndex = sensorIndex;
+      break;
+  }
+  return lightIndex;
+}
+
+boolean didSensorEventOccur(int sensorIndex) {
+  boolean sensorEvent = false;
+  if (sensorIndex == 8) {
+    sensorEvent = ddrSensorValues[sensorIndex] < 100;
+  } else {
+    sensorEvent = ddrSensorValues[sensorIndex] < 500;
+  }
+  return sensorEvent;
+}
 
 
 // ***********************************************************
