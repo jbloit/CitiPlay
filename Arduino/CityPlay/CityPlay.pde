@@ -24,6 +24,16 @@ Example sketch for driving Adafruit WS2801 pixels!
 
 *****************************************************************************/
 
+// GAME VARS
+
+typedef enum GameMode {
+  GameModeNone = 0,
+  GameModeTouchReact,
+  GameModeWhacamole
+} GameMode;
+
+GameMode currGameMode = GameModeTouchReact;
+
 
 // LIGHT VARS
 
@@ -39,12 +49,9 @@ int sensorLightIndex[NUM_LIGHTS];
 Adafruit_WS2801 strip = Adafruit_WS2801(NUM_LIGHTS, dataPin, clockPin);
 
 
-
-
-
 // SENSOR VARS
 
-#define SENSOR_EVENT_THRESHOLD 2
+#define SENSOR_EVENT_THRESHOLD 4
 
 #define NUM_DDR_PINS 8
 
@@ -101,13 +108,7 @@ void setup() {
 
 
 void loop() {
-  // Some example procedures showing how to display to the pixels
-  
-  //colorWipe(Color(255, 0, 0), 50);
-  //colorWipe(Color(0, 255, 0), 50);
-  //colorWipe(Color(0, 0, 255), 50);
-  //rainbow(20);
-  //rainbowCycle(20);
+
   
   // Read ddr Sensor values
   
@@ -124,11 +125,25 @@ void loop() {
   }
   Serial.println();
   
+  switch(currGameMode) {
+     case GameModeTouchReact:
+     playGameModeTouchReact();
+     break;
+     case GameModeWhacamole:
+     break;
+     default:
+     break;
+  }
+}
+
+// ***********************************************************
+// GAMEPLAY FUNCTIONS
+// ***********************************************************
+
+void playGameModeTouchReact() {
+  
   for (int i = 0; i < NUM_DDR_PINS; i++) {
     
-    // TESTING...
-    //setColorForLightsAtSensorIndex(i, Color(255, 0, 0));
-    //strip.show();
     
     if (didSensorEventOccur(i)) {
       numConsecutiveSensorEvents[i]++;
@@ -174,7 +189,6 @@ void loop() {
       setColorForLightsAtSensorIndex(lightIndex, Color(0, 0, 0));
       strip.show();
     }
-      
   }
 }
 
