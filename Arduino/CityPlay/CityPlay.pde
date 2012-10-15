@@ -34,7 +34,7 @@ typedef enum GameMode {
   GameModeSkipScotch
 } GameMode;
 
-GameMode currGameMode = GameModeWhacamole;
+GameMode currGameMode = GameModeSkipScotch;
 
 
 // LIGHT VARS
@@ -137,6 +137,10 @@ void loop() {
      break;
      case GameModeCycleColors:
      playGameModeCycleColors();
+     break;
+     case GameModeSkipScotch:
+     playGameModeSkipScotch();
+     break;
      default:
      break;
   }
@@ -179,6 +183,42 @@ int generateNextMoleIndex(int lastIndex) {
     } 
     
     return nextIndex;
+}
+
+
+int currSkipScotchIndex = 0;
+int skipIndex = 0;
+
+void playGameModeSkipScotch() {    
+    
+    if (skipIndex == 0) {
+        skipIndex = generateSkipIndex();
+    }
+    
+    if (didSensorEventOccur(currSkipScotchIndex)) {
+         int currentChord = random(0, 13);  
+         play(currentChord, 500);
+         
+         int nextIndex = currSkipScotchIndex + 1;
+         
+         if (nextIndex >= NUM_DDR_PINS) {
+             nextIndex = 0;
+         } else if (nextIndex == skipIndex) {
+             nextIndex++;
+         }
+         
+         skipIndex = generateSkipIndex();
+         currSkipScotchIndex = nextIndex;
+     } else {
+         uint32_t sensorColor = defaultColorForSensorIndex(currSkipScotchIndex);
+         int lightIndex = lightIndexForSensorIndex(currSkipScotchIndex);
+         setColorOnlyForLightsAtSensorIndex(lightIndex, sensorColor);
+         strip.show();
+     }
+}
+
+int generateSkipIndex() {
+    return random(2,NUM_DDR_PINS - 1);
 }
 
 
@@ -245,7 +285,7 @@ void playGameModeCycleColors() {
              }
          }         
          strip.show();
-         delay(100);
+         delay(500);
     }
     //defaultColorForSensorIndex
 }
