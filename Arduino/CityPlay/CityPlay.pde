@@ -34,7 +34,7 @@ typedef enum GameMode {
   GameModeSkipScotch
 } GameMode;
 
-GameMode currGameMode = GameModeSkipScotch;
+GameMode currGameMode = GameModeCycleColors;
 
 
 // LIGHT VARS
@@ -218,7 +218,7 @@ void playGameModeSkipScotch() {
 }
 
 int generateSkipIndex() {
-    return random(2,NUM_DDR_PINS - 1);
+    return random(1,NUM_DDR_PINS - 1);
 }
 
 
@@ -229,7 +229,7 @@ void playGameModeTouchReact() {
     
     if (didSensorEventOccur(i)) {
       numConsecutiveSensorEvents[i]++;
-    } else {
+    } else {    
       numConsecutiveSensorEvents[i] = 0;
     }
     
@@ -409,7 +409,7 @@ uint32_t defaultColorForSensorIndex(int sensorIndex) {
 // ***********************************************************
 
 
-void play(int chordIndex, int maxDuration){
+void play(int chordIndex, int maxDuration) {
 
   if(chordIndex < 0){
     noTone(speakerPin);
