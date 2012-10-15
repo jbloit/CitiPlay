@@ -29,10 +29,12 @@ Example sketch for driving Adafruit WS2801 pixels!
 typedef enum GameMode {
   GameModeNone = 0,
   GameModeTouchReact,
-  GameModeWhacamole
+  GameModeWhacamole,
+  GameModeCycleColors,
+  GameModeSkipScotch
 } GameMode;
 
-GameMode currGameMode = GameModeTouchReact;
+GameMode currGameMode = GameModeWhacamole;
 
 
 // LIGHT VARS
@@ -47,6 +49,7 @@ int sensorLightIndex[NUM_LIGHTS];
 
 // Set the first variable to the NUMBER of pixels. 25 = 25 pixels in a row
 Adafruit_WS2801 strip = Adafruit_WS2801(NUM_LIGHTS, dataPin, clockPin);
+
 
 
 // SENSOR VARS
@@ -130,7 +133,10 @@ void loop() {
      playGameModeTouchReact();
      break;
      case GameModeWhacamole:
+     playGameModeWhacamole();
      break;
+     case GameModeCycleColors:
+     playGameModeCycleColors();
      default:
      break;
   }
@@ -139,6 +145,42 @@ void loop() {
 // ***********************************************************
 // GAMEPLAY FUNCTIONS
 // ***********************************************************
+
+int currMoleIndex = 0;
+
+void playGameModeWhacamole() {
+    
+    if (didSensorEventOccur(currMoleIndex)) {
+        int currentChord = random(0, 13);  
+        play(currentChord, 500);
+        currMoleIndex = generateNextMoleIndex(currMoleIndex);
+    } else {
+        uint32_t sensorColor = defaultColorForSensorIndex(currMoleIndex);
+        int lightIndex = lightIndexForSensorIndex(currMoleIndex);
+        setColorOnlyForLightsAtSensorIndex(lightIndex, sensorColor);
+        strip.show();
+    }
+}
+
+int generateNextMoleIndex(int lastIndex) {
+    int nextIndex = 0;
+    int incrementAmount = random(1, 4);
+    
+    int polarityValue = random(1,100);
+    if (polarityValue > 50) {
+        incrementAmount *= -1;
+    }
+    
+    nextIndex = lastIndex + incrementAmount;
+    
+    // make sure we are not out of bounds
+    if (nextIndex < 0 || nextIndex > NUM_DDR_PINS) {
+        nextIndex = lastIndex - incrementAmount;
+    } 
+    
+    return nextIndex;
+}
+
 
 void playGameModeTouchReact() {
   
@@ -190,6 +232,22 @@ void playGameModeTouchReact() {
       strip.show();
     }
   }
+}
+
+void playGameModeCycleColors() {
+    for (int i = 0; i < NUM_DDR_PINS; i++) {
+         setColorForLightsAtSensorIndex(i, defaultColorForSensorIndex(i));
+         uint32_t noColor = Color(0,0,0);
+         
+         for (int j = 0; j < NUM_DDR_PINS; j++) {
+             if (i != j) {
+                 setColorForLightsAtSensorIndex(j, noColor);
+             }
+         }         
+         strip.show();
+         delay(100);
+    }
+    //defaultColorForSensorIndex
 }
 
 
@@ -244,6 +302,19 @@ void setColorForLightsAtSensorIndex(int sensorIndex, uint32_t color) {
   strip.setPixelColor(sensorIndex * 2 + 1, color);
 }
 
+void setColorOnlyForLightsAtSensorIndex(int sensorIndex, uint32_t color) {
+    uint32_t noColor = Color(0,0,0);
+    for (int i = 0; i < NUM_DDR_PINS; i++) {
+        if (i == sensorIndex) {
+            setColorForLightsAtSensorIndex(i, color);
+        } else {
+            setColorForLightsAtSensorIndex(i, noColor);
+        }
+    }
+    strip.show();
+}
+
+
 /* Helper functions */
 
 // Create a 24 bit color value from R,G,B
@@ -256,6 +327,40 @@ uint32_t Color(byte r, byte g, byte b)
   c <<= 8;
   c |= b;
   return c;
+}
+
+uint32_t defaultColorForSensorIndex(int sensorIndex) {
+    uint32_t color;
+    switch(sensorIndex) {
+        case 0:
+        color = Color(255, 0, 0);
+        break;
+        case 1:
+        color = Color(0, 255, 0);
+        break;
+        case 2:
+        color = Color(0, 0, 255);
+        break;
+        case 3:
+        color = Color(255, 255, 0);
+        break;
+        case 4:
+        color = Color(0, 255, 255);
+        break;
+        case 5:
+        color = Color(255, 0, 255);
+        break;
+        case 6:
+        color = Color(51,255,204);
+        break;
+        case 7:
+        color = Color(51,255,102);
+        break;
+        case 8:
+        color = Color(204,255,51);
+        break;        
+    }
+    return color;
 }
 
 
