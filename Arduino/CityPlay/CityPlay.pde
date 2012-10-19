@@ -34,7 +34,7 @@ typedef enum GameMode {
   GameModeSkipScotch
 } GameMode;
 
-GameMode currGameMode = GameModeCycleColors;
+GameMode currGameMode = GameModeTouchReact;
 
 
 // LIGHT VARS
@@ -54,9 +54,9 @@ Adafruit_WS2801 strip = Adafruit_WS2801(NUM_LIGHTS, dataPin, clockPin);
 
 // SENSOR VARS
 
-#define SENSOR_EVENT_THRESHOLD 4
+#define SENSOR_EVENT_THRESHOLD 2
 
-#define NUM_DDR_PINS 8
+#define NUM_DDR_PINS 9
 
 int ddrSensorValues[NUM_DDR_PINS];
 int numConsecutiveSensorEvents[NUM_DDR_PINS];
@@ -324,7 +324,7 @@ int lightIndexForSensorIndex(int sensorIndex) {
 
 boolean didSensorEventOccur(int sensorIndex) {
   boolean sensorEvent = false;
-  if (sensorIndex == 8) {
+  if (sensorIndex == 99) {
     sensorEvent = ddrSensorValues[sensorIndex] < 100;
   } else {
     sensorEvent = ddrSensorValues[sensorIndex] < 500;

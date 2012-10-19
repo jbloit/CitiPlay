@@ -1,0 +1,13 @@
+Description:
+
+Citiplay: facilitating playful interactions in everyday surroundings by turning sidewalks into gameboards.
+
+Citiplay is an interactive, digital version of the iconic street game hopscotch that seeks to foster a sense of urban play. The game functions much like the game “Simon” by asking participants to remember and repeat patterns by stepping on hopscotch tiles that light up in sequence. Aimed at both the passerby walking by on their way to work, as well as someone who may be spending more time on the street, Citiplay hopes to engage people with one another, create a physical connection to electronics and data, and enrich everyone’s experience of the urban streetscape.
+
+The board itself is constructed from repurposed materials and off the shelf electronics. The game is controlled by a micro-controller that can easily be re-programmed to provide new types of interaction.
+
+Instructions:
+
+Ready. Set. Play!
+
+Project by Martin Bednar, Noah Brezel, Emily Martiny, Julien Bloit, Paul Mans, Samantha Senn and Laurence Srinivasan
