@@ -5,6 +5,8 @@ An interactive hopscotch game designed during the SF urban prototyping hackathon
 
 CitiPlay is a concept of turning a sidewalk into a game board. While this can take many shapes and forms, we did it by creating an interactive portable game of hopscotch.
 
+Find out more about the project and make it yourself, here:  (http://citiplay.org/)
+
 
 The Gameboard
 -----------------------------------------------
